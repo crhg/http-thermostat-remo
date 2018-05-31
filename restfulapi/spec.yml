@@ -1,0 +1,159 @@
+swagger: "2.0"
+info:
+  description: "HTTP Thermostat API"
+  version: "1.0.0"
+  title: "HTTP Thermostat"
+host: "localhost:8000"
+basePath: "/api"
+tags:
+- name: "http-thermostat"
+schemes:
+- "http"
+paths:
+  "/thermostat/{name}/status":
+    parameters:
+      - name: name
+        in: path
+        type: string
+    get:
+      tags:
+      - "http-thermostat"
+      summary: "Get any thermostat info"
+      description: "Get any thermostat info"
+      operationId: "status"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "xebug_session_start"
+        type: string
+      responses:
+        200:
+          description: "OK"
+          schema:
+             $ref: '#/definitions/StatusValue'
+  "/thermostat/{name}/off":
+    parameters:
+      - name: name
+        in: path
+        type: string
+    get:
+      summary: "off"
+      description: "off"
+      tags:
+      - "http-thermostat"
+      operationId: "off"
+      responses:
+        200:
+          description: "OK"
+  "/thermostat/{name}/comfort":
+    parameters:
+      - name: name
+        in: path
+        type: string
+    get:
+      summary: "comfort"
+      description: "comfort = heating"
+      tags:
+      - "http-thermostat"
+      operationId: comfort
+      responses:
+        200:
+          description: "OK"
+  "/thermostat/{name}/no-frost":
+    parameters:
+      - name: name
+        in: path
+        type: string
+    get:
+      summary: "no-frost"
+      description: "no-frost = cooling"
+      tags:
+      - "http-thermostat"
+      operationId: noFrost
+      responses:
+        200:
+          description: "OK"
+  "/thermostat/{name}/auto":
+    parameters:
+      - name: name
+        in: path
+        type: string
+    get:
+      summary: "auto"
+      description: "auto"
+      tags:
+      - "http-thermostat"
+      operationId: auto
+      responses:
+        200:
+          description: "OK"
+  "/thermostat/{name}/targetHeatingCoolingState/{state}":
+    parameters:
+      - name: name
+        in: path
+        type: string
+      - name: state
+        in: path
+        type: number
+    get:
+      summary: "Set heating/cooling state"
+      description: "Set heating/cooling state"
+      tags:
+      - "http-thermostat"
+      operationId: targetHeatingCoolingState
+      responses:
+        200:
+          description: "OK"
+  "/thermostat/{name}/targetTemperature/{temp}":
+    parameters:
+      - name: name
+        in: path
+        type: string
+      - name: temp
+        in: path
+        type: number
+    get:
+      summary: "Set target temperature"
+      description: "Set target temperature"
+      tags:
+      - "http-thermostat"
+      operationId: targetTemperature
+      responses:
+        200:
+          description: "OK"
+  "/thermostat/{name}/targetRelativeHumidity/{humidity}":
+    parameters:
+      - name: name
+        in: path
+        type: string
+      - name: humidity
+        in: path
+        type: number
+    get:
+      summary: "Set target relative humidity"
+      description: "Set target relative humidity"
+      tags:
+      - "http-thermostat"
+      operationId: targetRelativeHumidity
+      responses:
+        200:
+          description: "OK"
+definitions:
+  StatusValue:
+      type: object
+      properties:
+        targetHeatingCoolingState:
+          type: integer
+        targetTemperature:
+          type: number
+        targetRelativeHumidity:
+          type: number
+        currentHeatingCoolingState:
+          type: integer
+        currentTemperature:
+          type: number
+        currentRelativeHumidity:
+          type: number
+
+
