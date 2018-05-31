@@ -15,17 +15,14 @@
 namespace App\RESTfulAPI\Controllers;
 
 use App\RESTfulAPI\Codegen\Controllers\HttpthermostatApiBase;
+use App\Thermostat;
 use Crhg\RemoClient\Api\DefaultApi;
-use Crhg\RemoClient\Model\AirConParams;
-use Crhg\RemoClient\Model\Appliance;
-use Crhg\RemoClient\Model\ApplianceType;
 use Crhg\RemoClient\Model\Button;
-use Crhg\RemoClient\Model\Device;
 use Crhg\RemoClient\Model\OperationMode;
 use http\Exception\InvalidArgumentException;
 use Illuminate\Http\Request;
 use Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 class HttpthermostatApi extends HttpthermostatApiBase
 {
@@ -38,66 +35,14 @@ class HttpthermostatApi extends HttpthermostatApiBase
      * @param string $name thermostat name
      *
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Crhg\RemoClient\ApiException
      */
     protected function status(Request $request, $name)
     {
-        \Log::debug('status', ['accessory' => $name]);
-        /** @var DefaultApi $api */
-        $api = app()->make(DefaultApi::class);
-
-        /** @var Appliance[] $appliances */
-        $appliances = $api->appliancesGet();
-        /** @var Appliance $aircon */
-        $aircon = array_first($appliances, function (Appliance $a) use ($name) { return $a->getId() === $name; });
-        if ($aircon === null) {
-            throw new NotFoundHttpException("$name not found");
-        }
-        if ($aircon->getType() !== ApplianceType::AC) {
-            throw new NotFoundHttpException("$name is not a thermostat");
-        }
-
-        $settings = $aircon->getSettings();
-        $temp = $settings->getTemp();
-        $state = $this->convertHeatingCoolingState($settings);
-
-        $device_id = $aircon->getDevice()->getId();
-        $devices = $api->devicesGet();
-        /** @var Device $device */
-        $device = array_first($devices, function (Device $d) use ($device_id) { return $d->getId() === $device_id; });
-        if ($device === null) {
-            throw new \RuntimeException("device not found: $device_id for $name");
-        }
-
-        $events = $device->getNewestEvents();
-        $te = $events->getTe();
-        $current_te = $te->getVal();
-        $hu = $events->getHu();
-        $current_hu = $hu->getVal();
-
-        $result = [
-            'targetHeatingCoolingState' => 0 + $state,
-            'targetTemperature' => 0.0 + $temp,
-            'targetRelativeHumidity' => 0.0 + 50.0,
-            'currentHeatingCoolingState' => 0 + $state,
-            'currentTemperature' => 0.0 + $current_te,
-            'currentRelativeHumidity' => 0.0 + $current_hu,
-        ];
+        /** @var Thermostat $thermostat */
+        $thermostat = app()->make(Thermostat::class, ['id' => $name]);
+        $result = $thermostat->getStatus();
 
         return Response::json($result);
-    }
-
-    private function convertHeatingCoolingState(AirConParams $settings): int
-    {
-        if ($settings->getButton() === Button::POWER_OFF) {
-            return 0;
-        }
-
-        if ($settings->getMode() === OperationMode::WARM) {
-            return 1;
-        }
-
-        return 2;
     }
 
     /**
@@ -208,10 +153,10 @@ class HttpthermostatApi extends HttpthermostatApiBase
      */
     private function setStatus($name, $mode, $button)
     {
-        /** @var DefaultApi $api */
-        $api = app()->make(DefaultApi::class);
+        /** @var Thermostat $thermostat */
+        $thermostat = app()->make(Thermostat::class, ['id' => $name]);
 
-        $api->appliancesApplianceAirconSettingsPost($name, null, $mode, null, null, $button);
+        $thermostat->setStatus($mode, $button);
     }
 
     /**
@@ -260,9 +205,9 @@ class HttpthermostatApi extends HttpthermostatApiBase
      */
     private function setTemperature($name, $temp)
     {
-        /** @var DefaultApi $api */
-        $api = app()->make(DefaultApi::class);
+        /** @var Thermostat $thermostat */
+        $thermostat = app()->make(Thermostat::class, ['id' => $name]);
 
-        $api->appliancesApplianceAirconSettingsPost($name, $temp);
+        $thermostat->setTemperature($temp);
     }
 }
