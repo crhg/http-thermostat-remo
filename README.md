@@ -32,9 +32,3 @@ Specify the base uri of the installed server as an argument and execute it.
     ]
 }
 ```
-
-# BUGS
-
-There is a problem that it easily reaches the rate limit of Nature API.
-
-

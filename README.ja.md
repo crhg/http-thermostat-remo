@@ -34,8 +34,3 @@ homebridgeのconfig.jsonに記述を追加します。必要な記述の例は``
     ]
 }
 ```
-
-# BUGS
-
-すぐにAPIのrate limitに到達するので対応予定です。
-
