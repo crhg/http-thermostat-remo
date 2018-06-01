@@ -35,6 +35,10 @@ class HttpthermostatApi extends HttpthermostatApiBase
      * @param string $name thermostat name
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Crhg\RemoClient\ApiException
      */
     protected function status(Request $request, $name)
     {
@@ -85,6 +89,7 @@ class HttpthermostatApi extends HttpthermostatApiBase
      * @param Request $request
      * @param $name
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @throws \InvalidArgumentException
      * @throws \Crhg\RemoClient\ApiException
      */
     protected function off(Request $request, $name)
@@ -103,6 +108,7 @@ class HttpthermostatApi extends HttpthermostatApiBase
      * @param Request $request
      * @param $name
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @throws \InvalidArgumentException
      * @throws \Crhg\RemoClient\ApiException
      */
     protected function comfort(Request $request, $name)
@@ -118,6 +124,7 @@ class HttpthermostatApi extends HttpthermostatApiBase
      * @param Request $request
      * @param $name
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @throws \InvalidArgumentException
      * @throws \Crhg\RemoClient\ApiException
      */
     protected function noFrost(Request $request, $name)
@@ -134,6 +141,7 @@ class HttpthermostatApi extends HttpthermostatApiBase
      * @param Request $request
      * @param $name
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @throws \InvalidArgumentException
      * @throws \Crhg\RemoClient\ApiException
      */
     protected function auto(Request $request, $name)
@@ -149,6 +157,7 @@ class HttpthermostatApi extends HttpthermostatApiBase
      * @param $name
      * @param $mode
      * @param $button
+     * @throws \InvalidArgumentException
      * @throws \Crhg\RemoClient\ApiException
      */
     private function setStatus($name, $mode, $button)
@@ -169,6 +178,7 @@ class HttpthermostatApi extends HttpthermostatApiBase
      * @param float $humidity (required)
      *
      * @return \Illuminate\Http\Response
+     * @throws \InvalidArgumentException
      */
     protected function targetRelativeHumidity(Request $request, $name, $humidity)
     {
@@ -187,6 +197,7 @@ class HttpthermostatApi extends HttpthermostatApiBase
      * @param float $temp (required)
      *
      * @return \Illuminate\Http\Response
+     * @throws \InvalidArgumentException
      * @throws \Crhg\RemoClient\ApiException
      */
     protected function targetTemperature(Request $request, $name, $temp)
@@ -201,6 +212,7 @@ class HttpthermostatApi extends HttpthermostatApiBase
     /**
      * @param $name
      * @param $temp
+     * @throws \InvalidArgumentException
      * @throws \Crhg\RemoClient\ApiException
      */
     private function setTemperature($name, $temp)

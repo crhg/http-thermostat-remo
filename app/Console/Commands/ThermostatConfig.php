@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpInconsistentReturnPointsInspection */
 
 namespace App\Console\Commands;
 
@@ -23,19 +23,10 @@ class ThermostatConfig extends Command
     protected $description = 'Output json fragment to configure homebridge';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
+     * @throws \InvalidArgumentException
      * @throws \Crhg\RemoClient\ApiException
      */
     public function handle()
@@ -60,15 +51,18 @@ class ThermostatConfig extends Command
                 $temps [] = $modes[$mode]->getTemp();
             }
 
+            /** @noinspection SlowArrayOperationsInLoopInspection */
             $temps = array_merge(...$temps);
 
             $minTemp = min($temps);
             $maxTemp = max($temps);
 
+            /** @var string $id */
+            $id = $a->getId();
             $accessories [] = [
                 'accessory' => 'Thermostat',
                 'name' => $a->getNickname(),
-                'apiroute' => $base_uri.'/api/thermostat/'.$a->getId(),
+                'apiroute' => $base_uri.'/api/thermostat/'.$id,
                 'maxTemp' => 0 + $maxTemp,
                 'minTemp' => 0 + $minTemp,
             ];

@@ -1,10 +1,8 @@
-<?php
+<?php /** @noinspection PhpInconsistentReturnPointsInspection */
 
 namespace App\Console\Commands;
 
 use Crhg\RemoClient\Api\DefaultApi;
-use Crhg\RemoClient\Model\AirConRange;
-use Crhg\RemoClient\Model\AirConRangeMode;
 use Crhg\RemoClient\Model\ApplianceType;
 use Illuminate\Console\Command;
 
@@ -25,19 +23,10 @@ class ThermostatList extends Command
     protected $description = 'List thermostats';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
+     * @throws \InvalidArgumentException
      * @throws \Crhg\RemoClient\ApiException
      */
     public function handle()
@@ -59,6 +48,7 @@ class ThermostatList extends Command
 
             $temps = [];
             foreach (['cool', 'warm'] as $mode) {
+                /** @noinspection SlowArrayOperationsInLoopInspection */
                 $temps = array_merge($temps, $modes[$mode]->getTemp());
             }
 

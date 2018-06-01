@@ -36,14 +36,27 @@ class Thermostat
         return self::STATUS_CACHE_KEY_PREFIX . $this->id;
     }
 
+    /**
+     * @return array
+     * @throws \Crhg\RemoClient\ApiException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     */
     public function getStatus(): array
     {
-        return Cache::remember($this->getStatusCacheKey(), self::EXPIRE, function () {
-            return $this->getStatusRaw();
-        });
+        return Cache::remember(
+            $this->getStatusCacheKey(),
+            self::EXPIRE,
+            function () {
+                return $this->getStatusRaw();
+            });
     }
 
     /**
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      * @throws \Crhg\RemoClient\ApiException
      */
     private function getStatusRaw(): array
@@ -68,6 +81,7 @@ class Thermostat
         $temp = $settings->getTemp();
         $state = $this->convertHeatingCoolingState($settings);
 
+        /** @var string $device_id */
         $device_id = $aircon->getDevice()->getId();
         $devices = $api->devicesGet();
         /** @var Device $device */
@@ -112,6 +126,7 @@ class Thermostat
     /**
      * @param $mode
      * @param $button
+     * @throws \InvalidArgumentException
      * @throws \Crhg\RemoClient\ApiException
      */
     public function setStatus($mode, $button)
@@ -126,6 +141,7 @@ class Thermostat
 
     /**
      * @param $temp
+     * @throws \InvalidArgumentException
      * @throws \Crhg\RemoClient\ApiException
      */
     public function setTemperature($temp)
