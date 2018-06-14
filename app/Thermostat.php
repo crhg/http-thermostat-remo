@@ -38,7 +38,6 @@ class Thermostat
 
     /**
      * @return array
-     * @throws \Crhg\RemoClient\ApiException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
