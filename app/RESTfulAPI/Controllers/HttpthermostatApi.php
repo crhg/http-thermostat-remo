@@ -38,7 +38,6 @@ class HttpthermostatApi extends HttpthermostatApiBase
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
-     * @throws \Crhg\RemoClient\ApiException
      */
     protected function status(Request $request, $name)
     {
